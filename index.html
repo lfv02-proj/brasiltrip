@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #007A33; /* Brazil green */
+            color: #FFD700; /* Brazil yellow */
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        #countdown {
+            font-size: 3em;
+            margin-top: 20px;
+        }
+
+        #language-select {
+            margin-top: 10px;
+            padding: 5px 10px;
+            border: 1px solid white; /* Brazil yellow */
+            background-color: #FFD700; /* Brazil green */
+            color: #007A33; /* Brazil yellow */
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #language-select option{
+             background-color: #007A33; /* Brazil green */
+             color: #FFD700; /* Brazil yellow */
+        }
+
+        .flag {
+            width: 20px;
+            height: 15px;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+
+        #message {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+		
+		#title {
+		  font-size: 50px;
+		}
+		
+		#details {
+		width: 300px;
+		margin: 50px auto;
+        padding: 20px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
+		text-align:left;
+		color: black;
+		font-size:20px;
+		}
+    </style>
+</head>
+<body>
+
+    <div id="title"></div>
+
+    <div id="countdown"></div>
+    <div id="message"></div>
+
+    <select id="language-select" onchange="changeLanguage(this.value)">
+        <option value="en"> <img class="flag" src="https://flagsapi.com/GB/shiny/64.png" alt="English Flag"> English</option>
+        <option value="pt"> <img class="flag" src="https://flagsapi.com/BR/shiny/64.png" alt="Portuguese Flag"> Português</option>
+    </select>
+
+    <div id="details">
+	Flight details / Detalhes do Voo</br>
+	TK215</br>
+	09/04/2025 20:05</br>
+	Istanbul Airport(Istanbul)</br>
+	10/04/2025 03:40</br>
+	Sao Paulo Guarulhos Airport
+	
+	</div>
+
+    <script>
+        const targetDate       = new Date("2025-04-10T12:00:00"); // Set your target date and time
+        const countdownDisplay = document.getElementById("countdown");
+        const messageDisplay   = document.getElementById("message");
+		const messageTitle     = document.getElementById("title");
+		
+
+        const translations = {
+            en: {
+			    title: "Countdown to April 10th",
+                message: "Get ready!",
+                days: "days",
+                hours: "hours",
+                minutes: "minutes",
+                seconds: "seconds"
+            },
+            pt: {
+			    title: "Contagem Regressiva para 10 de Abril",
+                message: "Prepare-se!",
+                days: "dias",
+                hours: "horas",
+                minutes: "minutos",
+                seconds: "segundos"
+            }
+        };
+
+        let currentLanguage = "en"; // Default language
+
+        function updateCountdown() {
+            const now = new Date();
+            const timeLeft = targetDate.getTime() - now.getTime();
+			
+            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+            countdownDisplay.innerHTML = `${days} ${translations[currentLanguage].days}, ${hours} ${translations[currentLanguage].hours}, ${minutes} ${translations[currentLanguage].minutes}, ${seconds} ${translations[currentLanguage].seconds}`;
+
+             if (timeLeft < 0) {
+                clearInterval(countdownInterval);
+                countdownDisplay.innerHTML = "It's here! ";
+                messageDisplay.innerHTML = "Chegou o dia!";
+            } else {
+                messageDisplay.innerHTML = translations[currentLanguage].message;
+                messageTitle.innerHTML = translations[currentLanguage].title;
+				
+            }
+        }
+
+        let countdownInterval = setInterval(updateCountdown, 1000);
+        updateCountdown(); // Initial call
+
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            updateCountdown();
+        }
+    </script>
+
+</body>
+</html>
